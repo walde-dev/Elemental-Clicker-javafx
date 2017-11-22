@@ -1,4 +1,4 @@
-package sample;
+package JavaFX_Stages;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -33,7 +33,7 @@ public class Main extends Application {
         root.setId("background-neutral");
 
         Scene mainScene = new Scene(root, GAME_WIDTH, GAME_HEIGHT);
-        mainScene.getStylesheets().add(Main.class.getResource("styles.css").toExternalForm());
+        mainScene.getStylesheets().add(Main.class.getResource("/images/styles.css").toExternalForm());
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             public void run() {
@@ -69,7 +69,7 @@ public class Main extends Application {
 
 
 
-        Image imageBackgroundClicks = new Image("sample/background_clicks.png");
+        Image imageBackgroundClicks = new Image("images/background_clicks.png");
         ImageView iv2 = new ImageView();
         iv2.setImage(imageBackgroundClicks);
         iv2.setFitWidth(145);
@@ -85,7 +85,7 @@ public class Main extends Application {
         textClicks.setTranslateY(iv2.getTranslateY());
         textClicks.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.3 * iv2.getFitWidth())));
 
-        imageCoin = new Image("sample/coin.png");
+        imageCoin = new Image("images/coin.png");
         ivCoin = new ImageView();
         ivCoin.setImage(imageCoin);
         ivCoin.setTranslateY(textClicks.getTranslateY());
