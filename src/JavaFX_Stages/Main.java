@@ -1,8 +1,12 @@
 package JavaFX_Stages;
+import Buildings.Building;
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -19,18 +23,20 @@ public class Main extends Application {
     public final double CLICK_WINDOW_TRANSLATE_X = -GAME_WIDTH/2.3;
     public final double CLICK_WINDOW_TRANSLATE_Y = -GAME_HEIGHT/2.5;
 
-    public final double BUILDINGS_WINDOW_TRANSLATE_X = GAME_WIDTH/2.4;
+    public final double BUILDINGS_WINDOW_TRANSLATE_X = GAME_WIDTH/2.5;
     public final double BUILDINGS_WINDOW_TRANSLATE_Y = -GAME_HEIGHT/2.5;
 
     public long AMOUNT_OF_COINS = 0;
-    public long COINS_PER_SECOND = 2;
+    public long COINS_PER_SECOND = 0;
     public long GAIN_PER_CLICK = 1;
-    public int AMOUNT_OF_FARMS = 0;
 
 
-    Text textClicks, textCoinsPerSecond;
+
+    Text textClicks, textCoinsPerSecond, farmCost, farmAmount;
     ImageView ivCoin;
     Image imageCoin;
+
+    Building Farm = new Building("Farm", "images/farm.png", 10, 2, 0);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -55,7 +61,6 @@ public class Main extends Application {
             }
         }, 1000, 1000);
 
-
         Button buttonClick = new Button();
         buttonClick.setText("Click");
         buttonClick.setId("shiny-orange");
@@ -66,6 +71,7 @@ public class Main extends Application {
         buttonClick.setOnAction((event) -> {
             click();
         });
+
 
 
         Image imageBackgroundClicks = new Image("images/background_clicks.png");
@@ -121,30 +127,60 @@ public class Main extends Application {
         buttonOptions.setTranslateX(buttonShop.getTranslateX());
         buttonOptions.setTranslateY(buttonShop.getTranslateY()+50);
 
-
         ImageView ivFarmBackground = new ImageView(imageBackgroundClicks);
         ivFarmBackground.setTranslateY(BUILDINGS_WINDOW_TRANSLATE_Y);
         ivFarmBackground.setTranslateX(BUILDINGS_WINDOW_TRANSLATE_X);
-        ivFarmBackground.setFitWidth(200);
+        ivFarmBackground.setFitWidth(250);
         ivFarmBackground.setFitHeight(75);
         ivFarmBackground.toBack();
         ivFarmBackground.setSmooth(true);
         ivFarmBackground.setCache(true);
 
+        ivFarmBackground.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            buy(Farm);
+            event.consume();
+        });
+
+
+
         ImageView ivFarm = new ImageView(new Image("images/farm.png"));
-        ivFarm.setTranslateX(ivFarmBackground.getTranslateX());
-        ivFarm.setTranslateY(ivFarmBackground.getTranslateY());
+        ivFarm.setTranslateX(ivFarmBackground.getTranslateX()-75);
+        ivFarm.setTranslateY(ivFarmBackground.getTranslateY()+3);
         ivFarm.toFront();
         ivFarm.setFitWidth(ivFarmBackground.getFitWidth()/3);
         ivFarm.setPreserveRatio(true);
         ivFarm.setSmooth(true);
         ivFarm.setCache(true);
 
+        Text farmText = new Text(Farm.getName());
+        farmText.setTranslateY(ivFarm.getTranslateY()-20);
+        farmText.setTranslateX(ivFarm.getTranslateX()+80);
+        farmText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.1 * ivFarmBackground.getFitWidth())));
 
 
-        root.getChildren().addAll(buttonClick, iv2, textClicks, ivCoin, ivFarmBackground, ivFarm, buttonShop, buttonOptions, ivCoinsPerSecond, textCoinsPerSecond);
+        farmCost = new Text(String.valueOf(Farm.getCost()));
+        farmCost.setTranslateY(farmText.getTranslateY()+30);
+        farmCost.setTranslateX(farmText.getTranslateX()-15);
+        farmCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.1 * ivFarmBackground.getFitWidth())));
+
+        farmAmount = new Text(String.valueOf(Farm.getAmount()));
+        farmAmount.setTranslateY(ivFarm.getTranslateY()-5);
+        farmAmount.setTranslateX(ivFarm.getTranslateX()+160);
+        farmAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.3 * ivFarmBackground.getFitWidth())));
+
+
+
+
+        root.getChildren().addAll(buttonClick, iv2, textClicks, ivCoin, ivFarmBackground, ivFarm, buttonShop, buttonOptions, ivCoinsPerSecond, textCoinsPerSecond, farmCost, farmText, farmAmount);
         primaryStage.setScene(mainScene);
         primaryStage.show();
+    }
+
+    void buy(Building b){
+        if(b.getCost() > AMOUNT_OF_COINS) return;
+        AMOUNT_OF_COINS-= b.getCost();
+        b.setAmount(b.getAmount()+1);
+        COINS_PER_SECOND+=b.getCoinsPerSecond();
     }
 
     void click(){
@@ -155,9 +191,12 @@ public class Main extends Application {
         AMOUNT_OF_COINS+=COINS_PER_SECOND;
     }
 
+
     void refreshGUI(){
         textClicks.setText(String.valueOf(AMOUNT_OF_COINS));
         textCoinsPerSecond.setText(String.valueOf(COINS_PER_SECOND) + " /s");
+        farmCost.setText(String.valueOf((int)Farm.getCost()));
+        farmAmount.setText(String.valueOf(Farm.getAmount()));
     }
 
     Image crop(Image image, int x, int y, int width, int height){
@@ -165,6 +204,7 @@ public class Main extends Application {
         WritableImage newImage = new WritableImage(reader, x, y, width, height);
         return newImage;
     }
+
 
 
     public static void main(String[] args) {
