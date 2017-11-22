@@ -49,7 +49,7 @@ public class Building {
     }
 
     public double getCoinsPerSecond() {
-        return coinsPerSecond * Math.pow(1.15, amount);
+        return coinsPerSecond * Math.pow(1.1, amount);
     }
 
     public void setCoinsPerSecond(int coinsPerSecond) {
