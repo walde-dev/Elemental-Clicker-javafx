@@ -52,9 +52,6 @@ public class Building {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public double getCost() {
         return (cost * Math.pow(1.15, amount));
