@@ -23,11 +23,6 @@ public class Building {
         return 100*(getTotalProduction()/p);
     }
 
-    public double getProduction(){
-        if(amount==0) return 0;
-        if(amount==1) return coinsPerSecond;
-        return coinsPerSecond * Math.pow(1.15, amount);
-    }
 
     public double getTotalProduction(){
         if(amount == 0) return 0;

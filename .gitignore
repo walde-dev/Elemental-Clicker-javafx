@@ -46,6 +46,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-workspace.xml
-Building.class
-Main.class
+.idea\workspace.xml
+out\production\Elemental Clicker\Buildings\Building.class
+out\production\Elemental Clicker\JavaFX_Stages\Main.class
