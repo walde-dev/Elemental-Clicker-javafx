@@ -32,12 +32,13 @@ public class Main extends Application {
 
 
 
-    Text textClicks, textCoinsPerSecond, farmCost, farmAmount, windmillCost, windmillAmount, farmProportion, windmillProportion;
+    Text textClicks, textCoinsPerSecond, farmCost, farmAmount, windmillCost, windmillAmount, farmProportion, windmillProportion, innCost, innAmount, innProportion;
     ImageView ivCoin;
     Image imageCoin;
 
-    Building Farm = new Building("Farm", "images/farm.png", 10, 2, 0);
-    Building Windmill = new Building("Windmill", "images/windmill.png", 150, 6, 0);
+    Building Farm = new Building("Farm", "images/farm.png", 10, 2);
+    Building Windmill = new Building("Windmill", "images/windmill.png", 150, 6);
+    Building Inn = new Building("Inn", "images/inn.png", 750, 20);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -206,7 +207,7 @@ public class Main extends Application {
         });
 
         Text windmillText = new Text(Windmill.getName());
-        windmillText.setTranslateY(ivWindmill.getTranslateY()-28);
+        windmillText.setTranslateY(ivWindmill.getTranslateY()-27);
         windmillText.setTranslateX(ivWindmill.getTranslateX()+80);
         windmillText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivWindmillBackground.getFitWidth())));
         windmillText.setOnMouseClicked((MouseEvent e) ->{
@@ -237,9 +238,62 @@ public class Main extends Application {
             buy(Windmill);
         });
 
+        ImageView ivInnBackground = new ImageView(imageBackgroundClicks);
+        ivInnBackground.setTranslateY(ivWindmillBackground.getTranslateY()+ivWindmillBackground.getFitHeight());
+        ivInnBackground.setTranslateX(ivWindmillBackground.getTranslateX());
+        ivInnBackground.setFitWidth(ivWindmillBackground.getFitWidth());
+        ivInnBackground.setFitHeight(ivWindmillBackground.getFitHeight());
+        ivInnBackground.setSmooth(true);
+        ivInnBackground.setCache(true);
+        ivInnBackground.setOnMouseClicked((MouseEvent e) ->{
+            buy(Inn);
+        });
+
+        ImageView ivInn = new ImageView(new Image(Inn.getUrl()));
+        ivInn.setTranslateX(ivInnBackground.getTranslateX()-75);
+        ivInn.setTranslateY(ivInnBackground.getTranslateY()+2);
+        ivInn.setFitWidth(ivInnBackground.getFitWidth()/3);
+        ivInn.setFitHeight(ivInnBackground.getFitHeight()-7);
+        ivInn.setCache(true);
+        ivInn.setSmooth(true);
+        ivInn.setOnMouseClicked((MouseEvent e) ->{
+            buy(Inn);
+        });
+
+        Text innText = new Text(Inn.getName());
+        innText.setTranslateY(ivInn.getTranslateY()-28);
+        innText.setTranslateX(ivInn.getTranslateX()+80);
+        innText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivInnBackground.getFitWidth())));
+        innText.setOnMouseClicked((MouseEvent e) ->{
+            buy(Inn);
+        });
+
+        innCost = new Text(String.valueOf(Inn.getCost()));
+        innCost.setTranslateY(innText.getTranslateY()+25);
+        innCost.setTranslateX(innText.getTranslateX());
+        innCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivInnBackground.getFitWidth())));
+        innCost.setOnMouseClicked((MouseEvent e) ->{
+            buy(Inn);
+        });
+
+        innAmount = new Text(String.valueOf(Inn.getAmount()));
+        innAmount.setTranslateY(ivInn.getTranslateY()-5);
+        innAmount.setTranslateX(ivInn.getTranslateX()+160);
+        innAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.15 * ivInnBackground.getFitWidth())));
+        innAmount.setOnMouseClicked((MouseEvent e) ->{
+            buy(Inn);
+        });
+
+        innProportion = new Text(String.valueOf((int)Inn.getProportion(COINS_PER_SECOND)) + " %");
+        innProportion.setTranslateX(innCost.getTranslateX());
+        innProportion.setTranslateY(innCost.getTranslateY()+25);
+        innProportion.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.06 * ivInnBackground.getFitWidth())));
+        innProportion.setOnMouseClicked((MouseEvent e) ->{
+            buy(Inn);
+        });
 
 
-        root.getChildren().addAll(iv2, textClicks, ivCoin, ivFarmBackground, ivFarm, buttonShop, buttonOptions, ivCoinsPerSecond, textCoinsPerSecond, farmCost, farmText, farmAmount, farmProportion, ivWindmillBackground, ivWindmill, windmillAmount, windmillCost, windmillText, windmillProportion,textClick);
+        root.getChildren().addAll(iv2, textClicks, ivCoin, ivFarmBackground, ivFarm, buttonShop, buttonOptions, ivCoinsPerSecond, textCoinsPerSecond, farmCost, farmText, farmAmount, farmProportion, ivWindmillBackground, ivWindmill, windmillAmount, windmillCost, windmillText, windmillProportion,textClick,ivInnBackground, ivInn, innText, innAmount, innCost, innProportion);
         primaryStage.setScene(mainScene);
         primaryStage.show();
     }
@@ -266,10 +320,13 @@ public class Main extends Application {
         textCoinsPerSecond.setText(format((long)COINS_PER_SECOND) + " /s");
         farmCost.setText(format((long)Farm.getCost()));
         farmAmount.setText(format((long) Farm.getAmount()));
-        farmProportion.setText(String.valueOf((int)Farm.getProportion(COINS_PER_SECOND)) + " %");
+        farmProportion.setText(String.valueOf(String.format("%.5g%n", Farm.getProportion(COINS_PER_SECOND))+"%").replaceAll("\r\n", " "));
         windmillCost.setText(format((long) Windmill.getCost()));
         windmillAmount.setText(format((long) Windmill.getAmount()));
-        windmillProportion.setText(String.valueOf((int) Windmill.getProportion(COINS_PER_SECOND)) + " %");
+        windmillProportion.setText(String.valueOf(String.format("%.5g%n", Windmill.getProportion(COINS_PER_SECOND))+"%").replaceAll("\r\n", " "));
+        innCost.setText(format((long) Inn.getCost()));
+        innAmount.setText(format((long) Inn.getAmount()));
+        innProportion.setText(String.valueOf(String.format("%.5g%n", Inn.getProportion(COINS_PER_SECOND))+"%").replaceAll("\r\n", " "));
     }
 
     private static final NavigableMap<Long, String> suffixes = new TreeMap<>();

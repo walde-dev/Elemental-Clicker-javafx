@@ -3,12 +3,12 @@ package Buildings;
 
 public class Building {
 
-    public Building(String name, String url, int cost, int coinsPerSecond, int amount) {
+    public Building(String name, String url, int cost, int coinsPerSecond) {
         this.name = name;
         this.url = url;
         this.cost = cost;
         this.coinsPerSecond = coinsPerSecond;
-        this.amount = amount;
+        this.amount = 0;
     }
 
     private String name;
@@ -19,7 +19,6 @@ public class Building {
 
     public double getProportion(double p){
         if(p==0) return 0;
-        System.out.println(getTotalProduction() + " " + p);
         return 100*(getTotalProduction()/p);
     }
 
