@@ -8,13 +8,25 @@ public class Building {
         this.cost = cost;
         this.coinsPerSecond = coinsPerSecond;
         this.amount = amount;
+        this.production = 0;
     }
 
     private String name;
     private String url;
     private int cost;
-    private int coinsPerSecond;
+    private double coinsPerSecond;
     private int amount;
+    private double production;
+
+    public double getProportion(double p){
+        System.out.println(production + " " + p);
+        if(p==0) return 0;
+        return 100*(production/p);
+    }
+
+    public void setProduction(){
+        this.production = coinsPerSecond*amount;
+    }
 
     public String getName() {
         return name;
@@ -49,10 +61,7 @@ public class Building {
     }
 
     public double getCoinsPerSecond() {
-        return coinsPerSecond * Math.pow(1.1, amount);
+        return coinsPerSecond;
     }
 
-    public void setCoinsPerSecond(int coinsPerSecond) {
-        this.coinsPerSecond = coinsPerSecond;
-    }
 }

@@ -25,13 +25,13 @@ public class Main extends Application {
     public final double BUILDINGS_WINDOW_TRANSLATE_X = GAME_WIDTH/2.5;
     public final double BUILDINGS_WINDOW_TRANSLATE_Y = -GAME_HEIGHT/2.5;
 
-    public long AMOUNT_OF_COINS = 0;
+    public long AMOUNT_OF_COINS = (long)Math.pow(10, 15);
     public long COINS_PER_SECOND = 0;
     public long GAIN_PER_CLICK = 1;
 
 
 
-    Text textClicks, textCoinsPerSecond, farmCost, farmAmount, windmillCost, windmillAmount;
+    Text textClicks, textCoinsPerSecond, farmCost, farmAmount, windmillCost, windmillAmount, farmProportion, windmillProportion;
     ImageView ivCoin;
     Image imageCoin;
 
@@ -65,7 +65,7 @@ public class Main extends Application {
             public void run() {
                 clickPerSecond();
             }
-        }, 1000, 1000);
+        }, 1000, 500);
 
 
         Image imageBackgroundClicks = new Image("images/background_clicks.png");
@@ -149,27 +149,35 @@ public class Main extends Application {
         });
 
         Text farmText = new Text(Farm.getName());
-        farmText.setTranslateY(ivFarm.getTranslateY()-20);
+        farmText.setTranslateY(ivFarm.getTranslateY()-28);
         farmText.setTranslateX(ivFarm.getTranslateX()+80);
-        farmText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.1 * ivFarmBackground.getFitWidth())));
+        farmText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivFarmBackground.getFitWidth())));
         farmText.setOnMouseClicked((MouseEvent e) ->{
             buy(Farm);
         });
 
 
         farmCost = new Text(String.valueOf(Farm.getCost()));
-        farmCost.setTranslateY(farmText.getTranslateY()+30);
+        farmCost.setTranslateY(farmText.getTranslateY()+25);
         farmCost.setTranslateX(farmText.getTranslateX());
-        farmCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.1 * ivFarmBackground.getFitWidth())));
+        farmCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivFarmBackground.getFitWidth())));
         farmCost.setOnMouseClicked((MouseEvent e) ->{
             buy(Farm);
         });
 
         farmAmount = new Text(String.valueOf(Farm.getAmount()));
         farmAmount.setTranslateY(ivFarm.getTranslateY()-5);
-        farmAmount.setTranslateX(ivFarm.getTranslateX()+155);
-        farmAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.19 * ivFarmBackground.getFitWidth())));
+        farmAmount.setTranslateX(ivFarm.getTranslateX()+160);
+        farmAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.15 * ivFarmBackground.getFitWidth())));
         farmAmount.setOnMouseClicked((MouseEvent e) ->{
+            buy(Farm);
+        });
+
+        farmProportion = new Text(String.valueOf((int)Farm.getProportion(COINS_PER_SECOND)) + " %");
+        farmProportion.setTranslateX(farmCost.getTranslateX());
+        farmProportion.setTranslateY(farmCost.getTranslateY()+25);
+        farmProportion.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.06 * ivFarmBackground.getFitWidth())));
+        farmProportion.setOnMouseClicked((MouseEvent e) ->{
             buy(Farm);
         });
 
@@ -197,32 +205,40 @@ public class Main extends Application {
         });
 
         Text windmillText = new Text(Windmill.getName());
-        windmillText.setTranslateY(ivWindmill.getTranslateY()-20);
+        windmillText.setTranslateY(ivWindmill.getTranslateY()-28);
         windmillText.setTranslateX(ivWindmill.getTranslateX()+80);
-        windmillText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.1 * ivWindmillBackground.getFitWidth())));
+        windmillText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivWindmillBackground.getFitWidth())));
         windmillText.setOnMouseClicked((MouseEvent e) ->{
             buy(Windmill);
         });
 
         windmillCost = new Text(String.valueOf(Windmill.getCost()));
-        windmillCost.setTranslateY(windmillText.getTranslateY()+30);
+        windmillCost.setTranslateY(windmillText.getTranslateY()+25);
         windmillCost.setTranslateX(windmillText.getTranslateX());
-        windmillCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.1 * ivWindmillBackground.getFitWidth())));
+        windmillCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivWindmillBackground.getFitWidth())));
         windmillCost.setOnMouseClicked((MouseEvent e) ->{
             buy(Windmill);
         });
 
         windmillAmount = new Text(String.valueOf(Windmill.getAmount()));
         windmillAmount.setTranslateY(ivWindmill.getTranslateY()-5);
-        windmillAmount.setTranslateX(ivWindmill.getTranslateX()+155);
-        windmillAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.19 * ivWindmillBackground.getFitWidth())));
+        windmillAmount.setTranslateX(ivWindmill.getTranslateX()+160);
+        windmillAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.15 * ivWindmillBackground.getFitWidth())));
         windmillAmount.setOnMouseClicked((MouseEvent e) ->{
+            buy(Windmill);
+        });
+
+        windmillProportion = new Text(String.valueOf((int)Windmill.getProportion(COINS_PER_SECOND)) + " %");
+        windmillProportion.setTranslateX(windmillCost.getTranslateX());
+        windmillProportion.setTranslateY(windmillCost.getTranslateY()+25);
+        windmillProportion.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.06 * ivWindmillBackground.getFitWidth())));
+        windmillProportion.setOnMouseClicked((MouseEvent e) ->{
             buy(Windmill);
         });
 
 
 
-        root.getChildren().addAll(iv2, textClicks, ivCoin, ivFarmBackground, ivFarm, buttonShop, buttonOptions, ivCoinsPerSecond, textCoinsPerSecond, farmCost, farmText, farmAmount, ivWindmillBackground, ivWindmill, windmillAmount, windmillCost, windmillText,textClick);
+        root.getChildren().addAll(iv2, textClicks, ivCoin, ivFarmBackground, ivFarm, buttonShop, buttonOptions, ivCoinsPerSecond, textCoinsPerSecond, farmCost, farmText, farmAmount, farmProportion, ivWindmillBackground, ivWindmill, windmillAmount, windmillCost, windmillText, windmillProportion,textClick);
         primaryStage.setScene(mainScene);
         primaryStage.show();
     }
@@ -231,6 +247,7 @@ public class Main extends Application {
         if(b.getCost() > AMOUNT_OF_COINS) return;
         AMOUNT_OF_COINS-= b.getCost();
         b.setAmount(b.getAmount()+1);
+        b.setProduction();
         COINS_PER_SECOND+=b.getCoinsPerSecond();
     }
 
@@ -239,7 +256,7 @@ public class Main extends Application {
     }
 
     void clickPerSecond(){
-        AMOUNT_OF_COINS+=COINS_PER_SECOND;
+        AMOUNT_OF_COINS+=(COINS_PER_SECOND*0.5);
     }
 
 
@@ -248,18 +265,20 @@ public class Main extends Application {
         textCoinsPerSecond.setText(format(COINS_PER_SECOND) + " /s");
         farmCost.setText(format((long)Farm.getCost()));
         farmAmount.setText(format((long) Farm.getAmount()));
+        farmProportion.setText(String.valueOf((int)Farm.getProportion(COINS_PER_SECOND)) + " %");
         windmillCost.setText(format((long) Windmill.getCost()));
         windmillAmount.setText(format((long) Windmill.getAmount()));
+        windmillProportion.setText(String.valueOf((int) Windmill.getProportion(COINS_PER_SECOND)) + " %");
     }
 
     private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
     static {
         suffixes.put(1_000L, "k");
         suffixes.put(1_000_000L, "M");
-        suffixes.put(1_000_000_000L, "G");
+        suffixes.put(1_000_000_000L, "B");
         suffixes.put(1_000_000_000_000L, "T");
-        suffixes.put(1_000_000_000_000_000L, "P");
-        suffixes.put(1_000_000_000_000_000_000L, "E");
+        suffixes.put(1_000_000_000_000_000L, "Qa");
+        suffixes.put(1_000_000_000_000_000_000L, "Qi");
     }
 
     public static String format(long value) {
