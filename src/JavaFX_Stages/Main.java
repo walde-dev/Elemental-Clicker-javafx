@@ -1,5 +1,4 @@
 package JavaFX_Stages;
-import Buildings.Building;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -19,6 +18,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.util.*;
+
+import Buildings.Building;
 
 public class Main extends Application {
 
@@ -41,19 +42,22 @@ public class Main extends Application {
     ImageView ivCoin;
     Image imageCoin;
 
-    Building Farm = new Building("Farm", "images/farm.png", 10, 2);
-    Building Windmill = new Building("Windmill", "images/windmill.png", 150, 6);
-    Building Inn = new Building("Inn", "images/inn.png", 750, 20);
+    Building Farm = Buildings.Farm.getFarm();
+    //Building Windmill = new Building("Windmill", "images/windmill.png", 150, 6);
+    //Building Inn = new Building("Inn", "images/inn.png", 750, 20);
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Elemental Clicker");
         primaryStage.setResizable(false);
+        primaryStage.setOnCloseRequest(ae -> {
+        	System.exit(0);
+        });
 
         Text textClick = new Text("+" + format(GAIN_PER_CLICK));
         textClick.setVisible(false);
 
-        StackPane root = new StackPane();
+        BorderPane root = new BorderPane();
         root.setId("background-neutral");
         root.setOnMouseClicked((MouseEvent e) ->{
             click();
@@ -64,7 +68,7 @@ public class Main extends Application {
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             public void run() {
-                refreshGUI();
+               uiContainers.DrawMaster.getDrawMaster().refreshTheItems();
             }
         }, 900, 1);
 
@@ -118,205 +122,24 @@ public class Main extends Application {
         ivCoin.setSmooth(true);
         ivCoin.setCache(true);
 
-        ImageView ivFarmBackground = new ImageView(imageBackgroundClicks);
-        ivFarmBackground.setTranslateY(BUILDINGS_WINDOW_TRANSLATE_Y);
-        ivFarmBackground.setTranslateX(BUILDINGS_WINDOW_TRANSLATE_X);
-        ivFarmBackground.setFitWidth(250);
-        ivFarmBackground.setFitHeight(75);
-        ivFarmBackground.toBack();
-        ivFarmBackground.setSmooth(true);
-        ivFarmBackground.setCache(true);
-
-        ivFarmBackground.setOnMouseClicked((MouseEvent e) ->{
-            buy(Farm);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
+        
+        GridPane gp = new GridPane();
+        for (int i = 0; i < 10; i++) {
+            RowConstraints row = new RowConstraints(100);
+            gp.getRowConstraints().add(row);
+        }
+        
+        uiContainers.Farm myFarmViewObject = new uiContainers.Farm();
+        gp.add(myFarmViewObject, 1, 0);
+        myFarmViewObject.setOnMouseClicked((MouseEvent e) ->{
+            buy(Buildings.Farm.getFarm());
         });
 
-
-
-        ImageView ivFarm = new ImageView(new Image("images/farm.png"));
-        ivFarm.setTranslateX(ivFarmBackground.getTranslateX()-75);
-        ivFarm.setTranslateY(ivFarmBackground.getTranslateY()+3);
-        ivFarm.toFront();
-        ivFarm.setFitWidth(ivFarmBackground.getFitWidth()/3);
-        ivFarm.setPreserveRatio(true);
-        ivFarm.setSmooth(true);
-        ivFarm.setCache(true);
-        ivFarm.setOnMouseClicked((MouseEvent e) ->{
-            buy(Farm);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        Text farmText = new Text(Farm.getName());
-        farmText.setTranslateY(ivFarm.getTranslateY()-28);
-        farmText.setTranslateX(ivFarm.getTranslateX()+80);
-        farmText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivFarmBackground.getFitWidth())));
-        farmText.setOnMouseClicked((MouseEvent e) ->{
-            buy(Farm);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-
-        farmCost = new Text(String.valueOf(Farm.getCost()));
-        farmCost.setTranslateY(farmText.getTranslateY()+25);
-        farmCost.setTranslateX(farmText.getTranslateX());
-        farmCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivFarmBackground.getFitWidth())));
-        farmCost.setOnMouseClicked((MouseEvent e) ->{
-            buy(Farm);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        farmAmount = new Text(String.valueOf(Farm.getAmount()));
-        farmAmount.setTranslateY(ivFarm.getTranslateY()-5);
-        farmAmount.setTranslateX(ivFarm.getTranslateX()+160);
-        farmAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.15 * ivFarmBackground.getFitWidth())));
-        farmAmount.setOnMouseClicked((MouseEvent e) ->{
-            buy(Farm);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        farmProportion = new Text(String.valueOf((int)Farm.getProportion(COINS_PER_SECOND)) + " %");
-        farmProportion.setTranslateX(farmCost.getTranslateX());
-        farmProportion.setTranslateY(farmCost.getTranslateY()+25);
-        farmProportion.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.06 * ivFarmBackground.getFitWidth())));
-        farmProportion.setOnMouseClicked((MouseEvent e) ->{
-            buy(Farm);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-
-        ImageView ivWindmillBackground = new ImageView(imageBackgroundClicks);
-        ivWindmillBackground.setTranslateY(ivFarmBackground.getTranslateY()+ivFarmBackground.getFitHeight());
-        ivWindmillBackground.setTranslateX(ivFarmBackground.getTranslateX());
-        ivWindmillBackground.setFitWidth(ivFarmBackground.getFitWidth());
-        ivWindmillBackground.setFitHeight(ivFarmBackground.getFitHeight());
-        ivWindmillBackground.setSmooth(true);
-        ivWindmillBackground.setCache(true);
-        ivWindmillBackground.setOnMouseClicked((MouseEvent e) ->{
-            buy(Windmill);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        ImageView ivWindmill = new ImageView(new Image(Windmill.getUrl()));
-        ivWindmill.setTranslateX(ivWindmillBackground.getTranslateX()-75);
-        ivWindmill.setTranslateY(ivWindmillBackground.getTranslateY()+2);
-        ivWindmill.setFitWidth(ivWindmillBackground.getFitWidth()/3);
-        ivWindmill.setFitHeight(ivWindmillBackground.getFitHeight()-7);
-        ivWindmill.setCache(true);
-        ivWindmill.setSmooth(true);
-        ivWindmill.setOnMouseClicked((MouseEvent e) ->{
-            buy(Windmill);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        Text windmillText = new Text(Windmill.getName());
-        windmillText.setTranslateY(ivWindmill.getTranslateY()-27);
-        windmillText.setTranslateX(ivWindmill.getTranslateX()+80);
-        windmillText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivWindmillBackground.getFitWidth())));
-        windmillText.setOnMouseClicked((MouseEvent e) ->{
-            buy(Windmill);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        windmillCost = new Text(String.valueOf(Windmill.getCost()));
-        windmillCost.setTranslateY(windmillText.getTranslateY()+25);
-        windmillCost.setTranslateX(windmillText.getTranslateX());
-        windmillCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivWindmillBackground.getFitWidth())));
-        windmillCost.setOnMouseClicked((MouseEvent e) ->{
-            buy(Windmill);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        windmillAmount = new Text(String.valueOf(Windmill.getAmount()));
-        windmillAmount.setTranslateY(ivWindmill.getTranslateY()-5);
-        windmillAmount.setTranslateX(ivWindmill.getTranslateX()+160);
-        windmillAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.15 * ivWindmillBackground.getFitWidth())));
-        windmillAmount.setOnMouseClicked((MouseEvent e) ->{
-            buy(Windmill);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        windmillProportion = new Text(String.valueOf((int)Windmill.getProportion(COINS_PER_SECOND)) + " %");
-        windmillProportion.setTranslateX(windmillCost.getTranslateX());
-        windmillProportion.setTranslateY(windmillCost.getTranslateY()+25);
-        windmillProportion.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.06 * ivWindmillBackground.getFitWidth())));
-        windmillProportion.setOnMouseClicked((MouseEvent e) ->{
-            buy(Windmill);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        ImageView ivInnBackground = new ImageView(imageBackgroundClicks);
-        ivInnBackground.setTranslateY(ivWindmillBackground.getTranslateY()+ivWindmillBackground.getFitHeight());
-        ivInnBackground.setTranslateX(ivWindmillBackground.getTranslateX());
-        ivInnBackground.setFitWidth(ivWindmillBackground.getFitWidth());
-        ivInnBackground.setFitHeight(ivWindmillBackground.getFitHeight());
-        ivInnBackground.setSmooth(true);
-        ivInnBackground.setCache(true);
-        ivInnBackground.setOnMouseClicked((MouseEvent e) ->{
-            buy(Inn);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        ImageView ivInn = new ImageView(new Image(Inn.getUrl()));
-        ivInn.setTranslateX(ivInnBackground.getTranslateX()-75);
-        ivInn.setTranslateY(ivInnBackground.getTranslateY()+2);
-        ivInn.setFitWidth(ivInnBackground.getFitWidth()/3);
-        ivInn.setFitHeight(ivInnBackground.getFitHeight()-7);
-        ivInn.setCache(true);
-        ivInn.setSmooth(true);
-        ivInn.setOnMouseClicked((MouseEvent e) ->{
-            buy(Inn);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        Text innText = new Text(Inn.getName());
-        innText.setTranslateY(ivInn.getTranslateY()-28);
-        innText.setTranslateX(ivInn.getTranslateX()+80);
-        innText.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivInnBackground.getFitWidth())));
-        innText.setOnMouseClicked((MouseEvent e) ->{
-            buy(Inn);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        innCost = new Text(String.valueOf(Inn.getCost()));
-        innCost.setTranslateY(innText.getTranslateY()+25);
-        innCost.setTranslateX(innText.getTranslateX());
-        innCost.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.09 * ivInnBackground.getFitWidth())));
-        innCost.setOnMouseClicked((MouseEvent e) ->{
-            buy(Inn);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        innAmount = new Text(String.valueOf(Inn.getAmount()));
-        innAmount.setTranslateY(ivInn.getTranslateY()-5);
-        innAmount.setTranslateX(ivInn.getTranslateX()+160);
-        innAmount.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.15 * ivInnBackground.getFitWidth())));
-        innAmount.setOnMouseClicked((MouseEvent e) ->{
-            buy(Inn);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-        innProportion = new Text(String.valueOf((int)Inn.getProportion(COINS_PER_SECOND)) + " %");
-        innProportion.setTranslateX(innCost.getTranslateX());
-        innProportion.setTranslateY(innCost.getTranslateY()+25);
-        innProportion.setStyle(String.format("-fx-font-size: %dpx;", (int)(0.06 * ivInnBackground.getFitWidth())));
-        innProportion.setOnMouseClicked((MouseEvent e) ->{
-            buy(Inn);
-            AMOUNT_OF_COINS-=GAIN_PER_CLICK;
-        });
-
-
-        ImageView ivUpgradesBackground = new ImageView(new Image("images/upgrades_gui.png"));
-        ivUpgradesBackground.setFitWidth(800);
-        ivUpgradesBackground.setPreserveRatio(true);
-        ivUpgradesBackground.setTranslateX(-GAME_WIDTH/2.45);
-        ivUpgradesBackground.setTranslateY(GAME_HEIGHT/4.59);
-        ivUpgradesBackground.setSmooth(true);
-        ivUpgradesBackground.setCache(true);
-
-
-
-        root.getChildren().addAll(ivUpgradesBackground, iv2, textClicks, ivCoin, ivFarmBackground, ivFarm, ivCoinsPerSecond, textCoinsPerSecond, farmCost, farmText, farmAmount, farmProportion, ivWindmillBackground, ivWindmill, windmillAmount, windmillCost, windmillText, windmillProportion,textClick,ivInnBackground, ivInn, innText, innAmount, innCost, innProportion);
+        
+        gp.setMaxHeight(GAME_HEIGHT);
+        gp.setPrefHeight(GAME_HEIGHT);
+        
+        root.setRight(gp);
         primaryStage.setScene(mainScene);
         primaryStage.show();
     }
@@ -339,17 +162,7 @@ public class Main extends Application {
 
 
     void refreshGUI(){
-        textClicks.setText(format(AMOUNT_OF_COINS));
-        textCoinsPerSecond.setText(format((long)COINS_PER_SECOND) + " /s");
-        farmCost.setText(format((long)Farm.getCost()));
-        farmAmount.setText(format((long) Farm.getAmount()));
-        farmProportion.setText(String.valueOf(String.format("%.5g%n", Farm.getProportion(COINS_PER_SECOND))+"%").replaceAll("\r\n", " "));
-        windmillCost.setText(format((long) Windmill.getCost()));
-        windmillAmount.setText(format((long) Windmill.getAmount()));
-        windmillProportion.setText(String.valueOf(String.format("%.5g%n", Windmill.getProportion(COINS_PER_SECOND))+"%").replaceAll("\r\n", " "));
-        innCost.setText(format((long) Inn.getCost()));
-        innAmount.setText(format((long) Inn.getAmount()));
-        innProportion.setText(String.valueOf(String.format("%.5g%n", Inn.getProportion(COINS_PER_SECOND))+"%").replaceAll("\r\n", " "));
+
     }
 
     private static final NavigableMap<Long, String> suffixes = new TreeMap<>();
