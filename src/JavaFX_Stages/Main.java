@@ -27,7 +27,7 @@ public class Main extends Application {
     public final double BUILDINGS_WINDOW_TRANSLATE_Y = -GAME_HEIGHT/2.5;
 
     public long AMOUNT_OF_COINS = (long)Math.pow(10, 15);
-    public long COINS_PER_SECOND = 0;
+    public double COINS_PER_SECOND = 0;
     public long GAIN_PER_CLICK = 1;
 
 
@@ -247,9 +247,9 @@ public class Main extends Application {
     void buy(Building b){
         if(b.getCost() > AMOUNT_OF_COINS) return;
         AMOUNT_OF_COINS-= b.getCost();
+        COINS_PER_SECOND-=b.getTotalProduction();
         b.setAmount(b.getAmount()+1);
-        b.setProduction();
-        COINS_PER_SECOND+=b.getProduction();
+        COINS_PER_SECOND+=b.getTotalProduction();
     }
 
     void click(){
@@ -263,7 +263,7 @@ public class Main extends Application {
 
     void refreshGUI(){
         textClicks.setText(format(AMOUNT_OF_COINS));
-        textCoinsPerSecond.setText(format(COINS_PER_SECOND) + " /s");
+        textCoinsPerSecond.setText(format((long)COINS_PER_SECOND) + " /s");
         farmCost.setText(format((long)Farm.getCost()));
         farmAmount.setText(format((long) Farm.getAmount()));
         farmProportion.setText(String.valueOf((int)Farm.getProportion(COINS_PER_SECOND)) + " %");

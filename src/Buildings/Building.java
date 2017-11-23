@@ -1,5 +1,6 @@
 package Buildings;
 
+
 public class Building {
 
     public Building(String name, String url, int cost, int coinsPerSecond, int amount) {
@@ -8,7 +9,6 @@ public class Building {
         this.cost = cost;
         this.coinsPerSecond = coinsPerSecond;
         this.amount = amount;
-        this.production = 0;
     }
 
     private String name;
@@ -16,20 +16,27 @@ public class Building {
     private int cost;
     private double coinsPerSecond;
     private int amount;
-    private double production;
 
     public double getProportion(double p){
         if(p==0) return 0;
-        return 100*(getProduction()/p);
-    }
-
-    public void setProduction(){
-        this.production = getProduction();
+        System.out.println(getTotalProduction() + " " + p);
+        return 100*(getTotalProduction()/p);
     }
 
     public double getProduction(){
-        return coinsPerSecond * Math.pow(1.1, amount);
+        if(amount==0) return 0;
+        if(amount==1) return coinsPerSecond;
+        return coinsPerSecond * Math.pow(1.15, amount);
     }
+
+    public double getTotalProduction(){
+        if(amount == 0) return 0;
+        if(amount == 1) return coinsPerSecond;
+        return -23.0/3.0 * Math.pow(20, -amount) * (Math.pow(20, amount) - Math.pow(23, amount)) * coinsPerSecond;
+
+    }
+
+
     public String getName() {
         return name;
     }
