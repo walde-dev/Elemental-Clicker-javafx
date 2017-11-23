@@ -19,15 +19,17 @@ public class Building {
     private double production;
 
     public double getProportion(double p){
-        System.out.println(production + " " + p);
         if(p==0) return 0;
-        return 100*(production/p);
+        return 100*(getProduction()/p);
     }
 
     public void setProduction(){
-        this.production = coinsPerSecond*amount;
+        this.production = getProduction();
     }
 
+    public double getProduction(){
+        return coinsPerSecond * Math.pow(1.1, amount);
+    }
     public String getName() {
         return name;
     }

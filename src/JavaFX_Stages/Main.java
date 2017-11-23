@@ -12,6 +12,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Main extends Application {
@@ -248,7 +249,7 @@ public class Main extends Application {
         AMOUNT_OF_COINS-= b.getCost();
         b.setAmount(b.getAmount()+1);
         b.setProduction();
-        COINS_PER_SECOND+=b.getCoinsPerSecond();
+        COINS_PER_SECOND+=b.getProduction();
     }
 
     void click(){
