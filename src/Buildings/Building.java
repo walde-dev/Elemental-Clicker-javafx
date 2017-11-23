@@ -19,6 +19,7 @@ public class Building {
 
     public double getProportion(double p){
         if(p==0) return 0;
+        System.out.println(getTotalProduction() + " " + p);
         return 100*(getTotalProduction()/p);
     }
 
