@@ -25,4 +25,10 @@ public class DrawMaster {
 		for(Drawable d : refreshItems)
 			d.draw();
 	}
+	
+	public void fixSizes() {
+		for(Drawable d : refreshItems)
+			d.fixSize();
+	}
+	
 }
