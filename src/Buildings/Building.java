@@ -92,7 +92,7 @@ public class Building {
 	}
 
 	public double getCost() {
-		return (cost * Math.pow(1.15, amount));
+		return (cost * Math.pow(1.2, amount));
 	}
 
 	public void setCost(int cost) {

@@ -66,18 +66,20 @@ public class Main extends Application {
 		}, 1000, 500);
 
 
-		HBox hb = new HBox();
-		hb.setSpacing(100);
-		hb.setStyle("-");
+		HBox hbStats = new HBox();
+		hbStats.setSpacing(100);
+		hbStats.setStyle("-");
 
-		GridPane gp = new GridPane();
+		GridPane gpPanels = new GridPane();
+
+		GridPane gpBuildings = new GridPane();
 		for (int i = 0; i < 10; i++) {
 			RowConstraints row = new RowConstraints(100);
-			gp.getRowConstraints().add(row);
+			gpBuildings.getRowConstraints().add(row);
 		}
 
 		uiContainers.DrawStats myStatsObject = new uiContainers.DrawStats(Player.getPlayer());
-		hb.getChildren().add(myStatsObject);
+		hbStats.getChildren().add(myStatsObject);
 
 		/*uiContainers.DrawBuilding myFarmViewObject = new uiContainers.DrawBuilding(Buildings.Farm.getFarm());
 		gp.add(myFarmViewObject, 0, 0);
@@ -98,19 +100,20 @@ public class Main extends Application {
 		});*/
 
 		Farm farm = Buildings.Farm.getFarm();
-		gp.add(farm.getView(),0,0);
+		gpBuildings.add(farm.getView(),0,0);
 
 		Windmill windmill = Buildings.Windmill.getWindmill();
-		gp.add(windmill.getView(), 0,1);
+		gpBuildings.add(windmill.getView(), 0,1);
 
 		Inn inn = Buildings.Inn.getInn();
-		gp.add(inn.getView(), 0,2);
+		gpBuildings.add(inn.getView(), 0,2);
 
-		gp.setMaxHeight(GAME_HEIGHT);
-		gp.setPrefHeight(GAME_HEIGHT);
+		gpBuildings.setMaxHeight(GAME_HEIGHT);
+		gpBuildings.setPrefHeight(GAME_HEIGHT);
 
-		root.setRight(gp);
-		root.setTop(hb);
+		root.setRight(gpBuildings);
+		root.setTop(hbStats);
+		root.setLeft(gpPanels);
 		primaryStage.setScene(mainScene);
 		primaryStage.show();
 		primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {

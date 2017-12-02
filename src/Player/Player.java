@@ -4,7 +4,7 @@ public class Player {
 
     private static Player myPlayer;
 
-    public Player(double coins, double coinsPerSecond, double coinsPerClick, int rubies, int diamonds) {
+    public Player(double coins, double coinsPerSecond, double coinsPerClick, double rubies, int diamonds) {
         this.coins = coins;
         this.coinsPerSecond = coinsPerSecond;
         this.coinsPerClick = coinsPerClick;
@@ -22,7 +22,7 @@ public class Player {
     double coins;
     double coinsPerSecond;
     double coinsPerClick;
-    int rubies;
+    double rubies;
     int diamonds;
 
 
@@ -46,7 +46,7 @@ public class Player {
         this.coinsPerSecond = coinsPerSecond;
     }
 
-    public int getRubies() {
+    public double getRubies() {
         return rubies;
     }
 
