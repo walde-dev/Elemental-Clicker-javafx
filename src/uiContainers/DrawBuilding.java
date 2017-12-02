@@ -31,17 +31,18 @@ public class DrawBuilding extends HBox implements Drawable {
 		ivbuilding.setCache(true);
 
 		VBox vb = new VBox();
-		vb.setStyle("-fx-border-color: red;");
 		vb.setAlignment(Pos.CENTER);
+		vb.setSpacing(5);
+		vb.setMinWidth(130);
 		buildingText = new Text(b.getName());
-		buildingText.setStyle("-fx-font-size: 12px;");
+		buildingText.setStyle("-fx-font-size: 22px;");
 
 		buildingCost = new Text(String.format("%.0f", b.getCost()));
-		buildingCost.setStyle("-fx-font-size: 12px;");
+		buildingCost.setStyle("-fx-font-size: 16px;");
 
 		buildingProportion = new Text(b.getProportion() == 0.0 ? String.format("%.0f%s", b.getProportion(), "%")
 				: String.format("%.1f%s", b.getProportion(), "%"));
-		buildingProportion.setStyle("-fx-font-size: 12px;");
+		buildingProportion.setStyle("-fx-font-size: 16px;");
 
 		vb.getChildren().addAll(buildingText, buildingCost, buildingProportion);
 
@@ -50,18 +51,19 @@ public class DrawBuilding extends HBox implements Drawable {
 		buildingAmount.textProperty().addListener((obs, oldVal, newVal) -> {
 			DrawMaster.getDrawMaster().fixSizes();
 		});
+		buildingAmount.setWrappingWidth(60);
 
 		setAlignment(Pos.CENTER);
 		setSpacing(25);
 		setPadding(new Insets(2));
 		setStyle(
-				"-fx-border-color: black;-fx-background-image: url('images/background_clicks.png');-fx-background-size: 201 100;");
+				"-fx-border-color: black;-fx-background-color: #FFFFFF;-fx-background-size: 201 100;-fx-border-width: 0 0 4 4;");
 		getChildren().addAll(ivbuilding, vb, buildingAmount);
 	}
 
 	@Override
 	public void fixSize() {
-		setStyle(String.format("-fx-border-color: black;" + "-fx-background-image: url('images/background_clicks.png');"
+		setStyle(String.format("-fx-border-color: black;-fx-background-color: #FFFFFF;-fx-border-width: 0 0 4 4;"
 				+ "-fx-background-size: %.0f %.0f;", getWidth(), getHeight()));
 	}
 

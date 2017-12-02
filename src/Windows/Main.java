@@ -1,8 +1,13 @@
 package Windows;
 
 import Player.Player;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
@@ -10,24 +15,21 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import uiContainers.DrawMaster;
 
 import java.util.*;
 
 import Buildings.Building;
 
+import javax.swing.text.Position;
+
 public class Main extends Application {
 
 	public final int GAME_WIDTH = 1200;
 	public final int GAME_HEIGHT = 800;
 
-	public final double CLICK_WINDOW_TRANSLATE_X = -GAME_WIDTH / 2.4;
-	public final double CLICK_WINDOW_TRANSLATE_Y = -GAME_HEIGHT / 2.18;
-
-	public final double BUILDINGS_WINDOW_TRANSLATE_X = GAME_WIDTH / 2.5;
-	public final double BUILDINGS_WINDOW_TRANSLATE_Y = -GAME_HEIGHT / 2.18;
-
-	Player p = new Player(0, 0, 0, 0,0);
+	Player p = new Player(1000000000, 0, 0, 0,0);
 
 	
 	@Override
@@ -40,7 +42,7 @@ public class Main extends Application {
 
 
 		BorderPane root = new BorderPane();
-		root.setId("background-neutral");
+		root.setStyle("-fx-background-color: #1b55a6");
 		root.setOnMouseClicked((MouseEvent e) -> {
 			click();
 		});
@@ -48,11 +50,12 @@ public class Main extends Application {
 		Scene mainScene = new Scene(root, GAME_WIDTH, GAME_HEIGHT);
 		mainScene.getStylesheets().add(Main.class.getResource("/images/styles.css").toExternalForm());
 
-		new Timer().scheduleAtFixedRate(new TimerTask() {
-			public void run() {
+		Timeline bThread = new Timeline(new
+				KeyFrame(Duration.millis(5), ae -> {
 				uiContainers.DrawMaster.getDrawMaster().refreshTheItems();
-			}
-		}, 900, 1);
+		}));
+		bThread.setCycleCount(Animation.INDEFINITE);
+		bThread.play();
 
 		new Timer().scheduleAtFixedRate(new TimerTask() {
 			public void run() {
@@ -60,12 +63,9 @@ public class Main extends Application {
 			}
 		}, 1000, 500);
 
-		Font alagard = Font.loadFont(getClass().getResourceAsStream("/Font/Alagard.ttf"), 20);
-
 
 		HBox hb = new HBox();
 		hb.setSpacing(100);
-		hb.setPadding(new Insets(15,12,15,12));
 		hb.setStyle("-");
 
 		GridPane gp = new GridPane();
