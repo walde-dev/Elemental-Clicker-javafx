@@ -1,6 +1,7 @@
 package Buildings;
 
 import javafx.scene.image.Image;
+import uiContainers.Drawable;
 
 public class Farm extends Building {
 

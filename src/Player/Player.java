@@ -2,6 +2,8 @@ package Player;
 
 public class Player {
 
+    private static Player myPlayer;
+
     public Player(double coins, double coinsPerSecond, double coinsPerClick, int rubies, int diamonds) {
         this.coins = coins;
         this.coinsPerSecond = coinsPerSecond;
@@ -10,11 +12,23 @@ public class Player {
         this.diamonds = diamonds;
     }
 
+    public static Player getPlayer() {
+        if (myPlayer == null) {
+            myPlayer = new Player(0,0,1,0,0);
+        }
+        return myPlayer;
+    }
+
     double coins;
     double coinsPerSecond;
     double coinsPerClick;
     int rubies;
     int diamonds;
+
+
+    public void reduceCoins(double amount){
+        coins-=amount;
+    }
 
     public double getCoins() {
         return coins;

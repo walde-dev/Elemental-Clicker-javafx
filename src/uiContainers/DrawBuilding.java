@@ -17,6 +17,7 @@ public class DrawBuilding extends HBox implements Drawable {
 	private Text buildingCost;
 	private Text buildingProportion;
 	private Text buildingAmount;
+	private int errorTimeLeft = 0;
 	private Building b;
 
 	public DrawBuilding(Building b) {
@@ -59,12 +60,25 @@ public class DrawBuilding extends HBox implements Drawable {
 		setStyle(
 				"-fx-border-color: black;-fx-background-color: #FFFFFF;-fx-background-size: 201 100;-fx-border-width: 0 0 4 4;");
 		getChildren().addAll(ivbuilding, vb, buildingAmount);
+
+
+
 	}
+
+	//view.setStyle(String.format("-fx-border-color: rgba(%i, %i, %i, 1.0)", counter, 255-counter, 255-counter));
+
 
 	@Override
 	public void fixSize() {
-		setStyle(String.format("-fx-border-color: black;-fx-background-color: #FFFFFF;-fx-border-width: 0 0 4 4;"
-				+ "-fx-background-size: %.0f %.0f;", getWidth(), getHeight()));
+		if(errorTimeLeft!=0){
+			this.setStyle(String.format("-fx-border-color: black;-fx-border-width: 0 0 4 4;"
+					+ "-fx-background-size: %.0f %.0f;", getWidth(), getHeight()) +
+					String.format("-fx-background-color: rgba(%d, 0, 0, 1.0)", 155+errorTimeLeft));
+		}else{
+			this.setStyle(
+					String.format("-fx-border-color: black;-fx-background-color: #FFFFFF;-fx-border-width: 0 0 4 4;"
+					+ "-fx-background-size: %.0f %.0f;", getWidth(), getHeight()));
+		}
 	}
 
 	@Override
@@ -74,6 +88,20 @@ public class DrawBuilding extends HBox implements Drawable {
 		buildingProportion.setText(b.getProportion() == 0.0 ? String.format("%.0f%s", b.getProportion(), "%")
 				: String.format("%.1f%s", b.getProportion(), "%"));
 		buildingAmount.setText(String.valueOf(b.getAmount()));
+		if(errorTimeLeft!=0){
+			this.setStyle(String.format("-fx-border-color: black;-fx-border-width: 0 0 4 4;"
+					+ "-fx-background-size: %.0f %.0f;", getWidth(), getHeight()) +
+					String.format("-fx-background-color: rgba(%d, 0, 0, 1.0)", 155+errorTimeLeft));
+					errorTimeLeft--;
+		}else{
+			this.setStyle(
+					String.format("-fx-border-color: black;-fx-background-color: #FFFFFF;-fx-border-width: 0 0 4 4;"
+					+ "-fx-background-size: %.0f %.0f;", getWidth(), getHeight()));
+		}
+	}
+
+	public void setErrorTimeLeft(int errorTimeLeft) {
+		this.errorTimeLeft = errorTimeLeft;
 	}
 
 	private static final NavigableMap<Double, String> suffixes = new TreeMap<>();
