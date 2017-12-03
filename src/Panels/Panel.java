@@ -10,9 +10,9 @@ public class Panel {
         this.isUnlocked = isUnlocked;
     }
 
-    String name;
-    ImageView image;
-    boolean isUnlocked;
+    private String name;
+    private ImageView image;
+    private boolean isUnlocked;
 
     public String getName() {
         return name;

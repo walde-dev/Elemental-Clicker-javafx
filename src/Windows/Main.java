@@ -1,31 +1,29 @@
 package Windows;
 
+import Achievments.Achievement;
 import Buildings.Farm;
 import Buildings.Inn;
 import Buildings.Windmill;
 import Player.Player;
+import Tabs.DrawAchievementTab;
+import Tabs.DrawUpgradeTab;
+import Upgrades.Upgrade;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import uiContainers.DrawMaster;
 
 import java.util.*;
 
-import Buildings.Building;
-
-import javax.swing.text.Position;
+import uiContainers.DrawPanel;
 
 public class Main extends Application {
 
@@ -46,8 +44,12 @@ public class Main extends Application {
 		BorderPane root = new BorderPane();
 		root.setStyle("-fx-background-color: #1b55a6");
 		root.setOnMouseClicked((MouseEvent e) -> {
+			if(e.getPickResult().getIntersectedNode() == null){
+				return;
+			}
 			click();
 		});
+
 
 		Scene mainScene = new Scene(root, GAME_WIDTH, GAME_HEIGHT);
 		mainScene.getStylesheets().add(Main.class.getResource("/images/styles.css").toExternalForm());
@@ -71,6 +73,42 @@ public class Main extends Application {
 		hbStats.setStyle("-");
 
 		GridPane gpPanels = new GridPane();
+		for (int i = 0; i < 10; i++) {
+			RowConstraints row = new RowConstraints(100);
+			gpPanels.getRowConstraints().add(row);
+		}
+
+		gpPanels.setVgap(5);
+		gpPanels.setPadding(new Insets(5, 0, 0, 0));
+
+		ArrayList<Upgrade> list = new ArrayList<>();
+		ArrayList<Achievement> list2 = new ArrayList<>();
+
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+		list2.add(new Achievement("kek", "kek", false, false, new ImageView(new Image("images/coin.png"))));
+
+
+		DrawUpgradeTab dut = new DrawUpgradeTab(list);
+		DrawAchievementTab dat = new DrawAchievementTab(list2);
+
+		DrawPanel dpUpgrades = new DrawPanel("images/upgrade.png", "Upgrades", dut);
+		DrawPanel dpAchievements = new DrawPanel("images/trophy.png", "Achievements", dat);
+
+		dpUpgrades.setPrefWidth(100);
+		gpPanels.setMargin(dpUpgrades, new Insets(10));
+		gpPanels.setMargin(dpAchievements, new Insets(10));
+		gpPanels.add(dpUpgrades, 0,0);
+		gpPanels.add(dpAchievements, 0,1);
+
 
 		GridPane gpBuildings = new GridPane();
 		for (int i = 0; i < 10; i++) {
@@ -80,24 +118,6 @@ public class Main extends Application {
 
 		uiContainers.DrawStats myStatsObject = new uiContainers.DrawStats(Player.getPlayer());
 		hbStats.getChildren().add(myStatsObject);
-
-		/*uiContainers.DrawBuilding myFarmViewObject = new uiContainers.DrawBuilding(Buildings.Farm.getFarm());
-		gp.add(myFarmViewObject, 0, 0);
-		myFarmViewObject.setOnMouseClicked((MouseEvent e) -> {
-			buy(Buildings.Farm.getFarm());
-		});
-
-		uiContainers.DrawBuilding myWindmillObject = new uiContainers.DrawBuilding(Buildings.Windmill.getWindmill());
-		gp.add(myWindmillObject, 0, 1);
-		myWindmillObject.setOnMouseClicked((MouseEvent e) -> {
-			buy(Buildings.Windmill.getWindmill());
-		});
-
-		uiContainers.DrawBuilding myInnObject = new uiContainers.DrawBuilding(Buildings.Inn.getInn());
-		gp.add(myInnObject, 0, 2);
-		myInnObject.setOnMouseClicked((MouseEvent e) -> {
-			buy(Buildings.Inn.getInn());
-		});*/
 
 		Farm farm = Buildings.Farm.getFarm();
 		gpBuildings.add(farm.getView(),0,0);
@@ -114,6 +134,7 @@ public class Main extends Application {
 		root.setRight(gpBuildings);
 		root.setTop(hbStats);
 		root.setLeft(gpPanels);
+		root.setCenter(dut);
 		primaryStage.setScene(mainScene);
 		primaryStage.show();
 		primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -124,15 +145,6 @@ public class Main extends Application {
 			DrawMaster.getDrawMaster().fixSizes();
 		});
 	}
-
-	/*void buy(Building b) {
-		if (b.getCost() > p.getCoins())
-			return;
-		p.setCoins(p.getCoins() - b.getCost());
-		p.setCoinsPerSecond(p.getCoinsPerSecond() - b.getTotalProduction());
-		b.setAmount(b.getAmount() + 1);
-		p.setCoinsPerSecond(p.getCoinsPerSecond() + b.getTotalProduction());
-	}*/
 
 	void click() {
 		Player.getPlayer().setCoins(Player.getPlayer().getCoins() + Player.getPlayer().getCoinsPerClick());
